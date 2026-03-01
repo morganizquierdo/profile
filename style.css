@@ -25,6 +25,11 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+::selection {
+  background-color: #f5d000;
+  color: #0c0d0f;
+}
+
 body {
   background-color: var(--bg);
   background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
