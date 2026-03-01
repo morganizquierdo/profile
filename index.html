@@ -11,12 +11,20 @@
 
   <div class="noise"></div>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <img class="lightbox-img" src="images/profile-dithered-3.png" alt="Morgan Izquierdo">
+  </div>
+
   <main class="container">
 
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <img class="avatar" src="images/profile-dithered-3.png" alt="Morgan Izquierdo">
+        <img class="avatar" src="images/profile-dithered-3.png" alt="Morgan Izquierdo" id="avatarTrigger" role="button" tabindex="0">
         <div class="header-info">
           <h1>Morgan Izquierdo</h1>
           <span class="location">Paris, France</span>
@@ -129,6 +137,26 @@
 
     btns.forEach(btn => {
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const avatarTrigger = document.getElementById('avatarTrigger');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    const openLightbox = () => { lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden', 'false'); };
+    const closeLightbox = () => { lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden', 'true'); };
+
+    avatarTrigger.addEventListener('click', openLightbox);
+    avatarTrigger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openLightbox(); });
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Cursor spotlight
+    document.addEventListener('mousemove', (e) => {
+      document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
     });
   </script>
 
