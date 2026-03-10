@@ -91,13 +91,72 @@
     <section class="section">
       <h2 class="section-label" data-en="Projects" data-fr="Projets">Projects</h2>
       <div class="projects-grid">
-        <div class="project-card under-construction">
+
+        <div class="project-card" id="openCalembours" role="button" tabindex="0">
           <div class="project-inner">
-            <span class="project-tag" data-en="Under construction" data-fr="En construction">Under construction</span>
+            <div class="project-card-top">
+              <span class="project-index">01</span>
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+            <div class="project-card-bottom">
+              <h3 class="project-title">Calembours Visuels</h3>
+              <p class="project-desc" data-en="Art, technology and what designers know." data-fr="L'art, la technologie et ce que les designers savent.">Art, technology and what designers know.</p>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
+
+    <!-- Overlay : Calembours Visuels -->
+    <div class="project-overlay" id="overlayCalembours" aria-hidden="true">
+      <div class="overlay-backdrop" id="overlayBackdrop"></div>
+      <div class="overlay-panel">
+        <button class="overlay-close" id="overlayClose" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="overlay-scroll">
+
+          <header class="overlay-header">
+            <p class="overlay-series" data-en="A series on art &amp; technology" data-fr="Une série sur l'art &amp; la technologie">A series on art &amp; technology</p>
+            <h2 class="overlay-title">Calembours<br>Visuels</h2>
+          </header>
+
+          <!-- Chapter 01 : Duchamp -->
+          <div class="overlay-chapter">
+            <span class="overlay-chapter-label">01 — Duchamp</span>
+            <blockquote class="overlay-quote">
+              "Duchamp's readymade is literally a mass-produced object, straight from the factory. By signing it, he asked: what is craftsmanship still worth when the machine produces the identical thing? AI is to software what the factory was to craft. A comparable revolution, 100 years apart."
+            </blockquote>
+            <div class="overlay-images overlay-images--1">
+              <figure class="overlay-figure">
+                <img src="images/calembours/duchamp-readymade-ai.png" alt="Untitled (Timeline), 2026 — prompt on Figma Make" class="overlay-img">
+                <figcaption>Untitled (Timeline), 2026 — prompt on Figma Make<br><em>R. Mutt, 2026</em></figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <!-- Chapter 02 : Matisse -->
+          <div class="overlay-chapter">
+            <span class="overlay-chapter-label">02 — Matisse</span>
+            <blockquote class="overlay-quote">
+              "There's a moment, early in the process, where a page is nothing but energy. No content. No metrics. No components. Just tension between masses, whitespace, movement. I've spent the last few days working on templates inspired by Matisse's cut-outs. To get back to intention, aesthetics, concept. And the fun."
+            </blockquote>
+            <div class="overlay-images overlay-images--3">
+              <img src="images/calembours/matisse-template-1.png" alt="Matisse template 1" class="overlay-img">
+              <img src="images/calembours/matisse-template-2.png" alt="Matisse template 2" class="overlay-img">
+              <img src="images/calembours/matisse-template-3.png" alt="Matisse template 3" class="overlay-img">
+            </div>
+            <div class="overlay-video">
+              <video controls playsinline>
+                <source src="images/calembours/matisse-skeleton.mov" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
     <!-- Footer / Links -->
     <footer class="footer">
@@ -138,6 +197,21 @@
     btns.forEach(btn => {
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
+
+    // Project overlay
+    const overlayCalembours = document.getElementById('overlayCalembours');
+    const openCalembours = document.getElementById('openCalembours');
+    const overlayClose = document.getElementById('overlayClose');
+    const overlayBackdrop = document.getElementById('overlayBackdrop');
+
+    const openOverlay = () => { overlayCalembours.classList.add('open'); overlayCalembours.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; };
+    const closeOverlay = () => { overlayCalembours.classList.remove('open'); overlayCalembours.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+
+    openCalembours.addEventListener('click', openOverlay);
+    openCalembours.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openOverlay(); });
+    overlayClose.addEventListener('click', closeOverlay);
+    overlayBackdrop.addEventListener('click', closeOverlay);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
     // Lightbox
     const lightbox = document.getElementById('lightbox');
