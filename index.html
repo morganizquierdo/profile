@@ -247,7 +247,7 @@
       const ctx     = canvas.getContext('2d');
 
       // ── Settings ──────────────────────────────────────────────────
-      const CELL    = 11;                   // grid cell size in px → face ≈ 20–25 cells
+      const CELL    = 14;                   // grid cell size in px → face ≈ 15–20 cells
       const ANGLE   = 22 * Math.PI / 180;  // line angle (rad)
       const LINE_W  = 1.5;                 // stroke thickness
       const CROP    = 1.0;                 // full image, no truncation
@@ -255,9 +255,10 @@
       const DUR_IN  = 800;                 // ms for reveal animation
       const DUR_OUT = 500;                 // ms for hide animation
 
-      let cells      = null;
-      let COLS       = 0;
-      let ROWS       = 0;
+      let cells        = null;
+      let flickerSeeds = null;
+      let COLS         = 0;
+      let ROWS         = 0;
       let visible    = false;
       let progress   = 0;
       let animId     = null;
@@ -296,9 +297,11 @@
         const rng = hi - lo || 1;
 
         cells = new Float32Array(COLS * ROWS);
+        flickerSeeds = new Float32Array(COLS * ROWS);
         for (let i = 0; i < cells.length; i++) {
           const lin = Math.max(0, Math.min(1, (rawLums[i] - lo) / rng));
           cells[i] = Math.pow(lin, 0.65); // gamma lift: boost midtones
+          flickerSeeds[i] = Math.random();  // uniform distribution garantie
         }
       }
 
@@ -325,17 +328,26 @@
             const ey = Math.min(y / (ROWS * VIGN), (ROWS - 1 - y) / (ROWS * VIGN), 1);
             const vign = ex * ey; // 0 at edges → 1 at center
 
-            // Pass 1 — background fill (depth/volume effect)
-            const bgAlpha = norm * norm * 0.16 * rowT * vign;
-            if (bgAlpha > 0.005) {
-              ctx.fillStyle = `rgba(226,226,226,${bgAlpha.toFixed(3)})`;
-              ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+            // Pass 1 — background fill : seulement les zones claires (norm > 0.35), effet discret
+            if (norm > 0.35) {
+              const bgAlpha = norm * norm * 0.07 * rowT * vign;
+              if (bgAlpha > 0.005) {
+                ctx.fillStyle = `rgba(226,226,226,${bgAlpha.toFixed(3)})`;
+                ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+              }
             }
 
-            // Per-cell deterministic angle jitter (no flicker between frames)
+            // Per-cell deterministic angle jitter (stable, no flicker)
             const h = ((x * 127.1 + y * 311.7) & 0xffff) / 0xffff;
             const jitter = (h - 0.5) * (24 * Math.PI / 180); // ±12°
-            const a = ANGLE + jitter;
+
+            // Angle drift : ~20% des traits oscillent lentement en direction (±8°)
+            const ha = ((Math.imul(x + 7, 0x9e3779b9) ^ Math.imul(y + 3, 0x6c62272e)) >>> 0) / 0xffffffff;
+            const drift = ha < 0.20
+              ? (8 * Math.PI / 180) * Math.sin(time * (0.15 + ha * 0.25) * Math.PI * 2 + ha * 6.28)
+              : 0;
+
+            const a  = ANGLE + jitter + drift;
             const cA = Math.cos(a), sA = Math.sin(a);
 
             // Pass 2 — diagonal line stroke
@@ -344,11 +356,16 @@
             const len = norm * CELL * 1.9 * rowT;
             if (len < 0.5) continue;
 
-            // Subtle per-cell flicker (~35% of strokes, slow sine at varied speed+phase)
-            const hf = ((x * 431.3 + y * 197.7) & 0xffff) / 0xffff;
-            const flickerDelta = hf < 0.35
-              ? 0.15 * Math.sin(time * (0.5 + hf * 1.5) * Math.PI * 2 + hf * 6.28)
-              : 0;
+            // Scintillement: 15% des cellules, distribution uniforme via seed précalculé
+            const hf = flickerSeeds[y * COLS + x];
+            let flickerDelta = 0;
+            if (hf < 0.15) {
+              const speed = 0.2 + hf * 0.6;                      // 0.2–0.8 Hz, lent
+              const phase = hf * 37.4 + x * 2.1 + y * 3.7;      // déphasage spatial fort
+              const raw   = Math.sin(time * speed * Math.PI * 2 + phase);
+              const pulse = Math.pow(Math.max(0, raw), 5);        // pic bref, off le reste du temps
+              flickerDelta = pulse * 0.55;                        // amplitude visible
+            }
             const strokeAlpha = Math.max(0, Math.min(1, norm * 0.80 * rowT * vign + flickerDelta));
 
             ctx.lineCap   = 'round';
