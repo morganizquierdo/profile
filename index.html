@@ -11,46 +11,44 @@
 
   <div class="noise"></div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox-close" id="lightboxClose" aria-label="Close">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-    <img class="lightbox-img" src="images/profile-dithered-3.png" alt="Morgan Izquierdo">
-  </div>
 
   <main class="container">
 
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <img class="avatar" src="images/profile-dithered-3.png" alt="Morgan Izquierdo" id="avatarTrigger" role="button" tabindex="0">
-        <div class="header-info">
-          <h1>Morgan Izquierdo</h1>
-          <span class="location">Paris, France</span>
+    <!-- Hero : canvas en fond + contenu par-dessus -->
+    <div class="hero-wrapper">
+
+      <!-- ASCII Portrait : en flux, détermine la hauteur du hero -->
+      <div class="ascii-section" id="asciiSection">
+        <div class="ascii-inner">
+          <canvas class="ascii-canvas" id="asciiCanvas"></canvas>
         </div>
       </div>
-      <nav class="lang-switcher">
-        <button class="lang-btn active" data-lang="en">EN</button>
-        <span class="lang-sep">/</span>
-        <button class="lang-btn" data-lang="fr">FR</button>
-      </nav>
-    </header>
 
-    <!-- ASCII Portrait -->
-    <div class="ascii-section" id="asciiSection">
-      <div class="ascii-inner">
-        <canvas class="ascii-canvas" id="asciiCanvas"></canvas>
+      <!-- Contenu superposé -->
+      <div class="hero-content">
+        <header class="header">
+          <div class="header-left">
+            <div class="header-info">
+              <h1>Morgan Izquierdo</h1>
+              <span class="location">Paris, France</span>
+            </div>
+          </div>
+          <nav class="lang-switcher">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <span class="lang-sep">/</span>
+            <button class="lang-btn" data-lang="fr">FR</button>
+          </nav>
+        </header>
+
+        <section class="section-tagline">
+          <p class="tagline">
+            <span class="tagline-bold" data-en="Leading with clarity" data-fr="La clarté comme boussole">Leading with clarity</span><span class="tagline-serif" data-en=" — designing focus for product design teams in fast-moving environments." data-fr=" — définir le focus des équipes design dans les environnements qui bougent vite."> — designing focus for product design teams in fast-moving environments.</span>
+          </p>
+          <img class="signature" src="images/signature.png" alt="Morgan Izquierdo">
+        </section>
       </div>
-    </div>
 
-    <!-- Tagline -->
-    <section class="section-tagline">
-      <p class="tagline">
-        <span class="tagline-bold" data-en="Leading with clarity" data-fr="La clarté comme boussole">Leading with clarity</span><span class="tagline-serif" data-en=" — designing focus for product design teams in fast-moving environments." data-fr=" — définir le focus des équipes design dans les environnements qui bougent vite."> — designing focus for product design teams in fast-moving environments.</span>
-      </p>
-      <img class="signature" src="images/signature.png" alt="Morgan Izquierdo">
-    </section>
+    </div>
 
     <!-- Experience -->
     <section class="section">
@@ -220,19 +218,6 @@
     overlayBackdrop.addEventListener('click', closeOverlay);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
-    // Lightbox
-    const lightbox = document.getElementById('lightbox');
-    const avatarTrigger = document.getElementById('avatarTrigger');
-    const lightboxClose = document.getElementById('lightboxClose');
-
-    const openLightbox = () => { lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden', 'false'); };
-    const closeLightbox = () => { lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden', 'true'); };
-
-    avatarTrigger.addEventListener('click', openLightbox);
-    avatarTrigger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openLightbox(); });
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
     // Cursor spotlight
     document.addEventListener('mousemove', (e) => {
@@ -422,14 +407,14 @@
         animateTo(0, DUR_OUT);
       }
 
-      // Use original photo (not dithered) for full luminance range
+      // Use original photo — reveal immédiat au chargement
       const src = new Image();
       src.src = 'images/profile.jpg';
-      src.addEventListener('load', () => buildCells(src));
+      const onLoad = () => { buildCells(src); show(); };
+      if (src.complete && src.naturalWidth > 0) onLoad();
+      else src.addEventListener('load', onLoad);
 
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 30) show();
-      }, { passive: true });
+      // La scène reste fixe via position:sticky — pas de JS parallax nécessaire
     })();
   </script>
 

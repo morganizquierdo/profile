@@ -32,8 +32,13 @@ html {
 
 body {
   background-color: var(--bg);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 8px 8px;
+  background-image: repeating-linear-gradient(
+    22deg,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 14px
+  );
   color: var(--text);
   font-family: var(--font);
   min-height: 100vh;
@@ -523,18 +528,44 @@ body::after {
 /* ─────────────────────────────────────────
    ASCII Portrait
 ───────────────────────────────────────── */
+.hero-wrapper {
+  position: relative;
+}
+
+.hero-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  pointer-events: none;
+}
+
+.hero-content .section-tagline {
+  padding-bottom: 24px;
+}
+
+.hero-content .header,
+.hero-content .section-tagline {
+  pointer-events: auto;
+}
+
 .ascii-section {
-  max-height: 0;
+  position: sticky;
+  top: 0;
   opacity: 0;
   background: #0c0d0f;
   box-shadow: 0 0 100px 80px #0c0d0f;
-  transition:
-    max-height 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity    0.45s ease 0.15s;
+  transition: opacity 0.6s ease;
+  padding-bottom: 160px;
 }
 
 .ascii-section.visible {
-  max-height: 620px;
   opacity: 1;
 }
 
