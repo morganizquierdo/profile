@@ -37,6 +37,13 @@
       </nav>
     </header>
 
+    <!-- ASCII Portrait -->
+    <div class="ascii-section" id="asciiSection">
+      <div class="ascii-inner">
+        <canvas class="ascii-canvas" id="asciiCanvas"></canvas>
+      </div>
+    </div>
+
     <!-- Tagline -->
     <section class="section-tagline">
       <p class="tagline">
@@ -232,6 +239,181 @@
       document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
       document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
     });
+
+    // ── Line Hatching Portrait (canvas) ──────────────────────────────
+    (function () {
+      const section = document.getElementById('asciiSection');
+      const canvas  = document.getElementById('asciiCanvas');
+      const ctx     = canvas.getContext('2d');
+
+      // ── Settings ──────────────────────────────────────────────────
+      const CELL    = 11;                   // grid cell size in px → face ≈ 20–25 cells
+      const ANGLE   = 22 * Math.PI / 180;  // line angle (rad)
+      const LINE_W  = 1.5;                 // stroke thickness
+      const CROP    = 1.0;                 // full image, no truncation
+      const Y_OFF   = 0.0;                // no vertical offset
+      const DUR_IN  = 800;                 // ms for reveal animation
+      const DUR_OUT = 500;                 // ms for hide animation
+
+      let cells      = null;
+      let COLS       = 0;
+      let ROWS       = 0;
+      let visible    = false;
+      let progress   = 0;
+      let animId     = null;
+      let flickerRaf = null;
+
+      // ── Build cell luminance map from avatar ──────────────────────
+      function buildCells(img) {
+        const w  = section.getBoundingClientRect().width || 632;
+        COLS = Math.floor(w / CELL);
+        ROWS = Math.round(COLS * (img.naturalHeight / img.naturalWidth) * CROP);
+
+        canvas.width  = COLS * CELL;
+        canvas.height = ROWS * CELL;
+
+        // Sample image cropped to top CROP fraction
+        const tmp = document.createElement('canvas');
+        tmp.width  = COLS;
+        tmp.height = ROWS;
+        const tCtx = tmp.getContext('2d');
+        tCtx.drawImage(img,
+          0, img.naturalHeight * Y_OFF, img.naturalWidth, img.naturalHeight * CROP,
+          0, 0, COLS, ROWS
+        );
+        const { data } = tCtx.getImageData(0, 0, COLS, ROWS);
+
+        const rawLums = new Float32Array(COLS * ROWS);
+        for (let i = 0; i < rawLums.length; i++) {
+          const p = i * 4;
+          rawLums[i] = (data[p]*0.299 + data[p+1]*0.587 + data[p+2]*0.114) / 255;
+        }
+
+        // Tight histogram stretch (2nd–98th percentile) + gamma lift
+        const sorted = Float32Array.from(rawLums).sort();
+        const lo  = sorted[Math.floor(sorted.length * 0.02)];
+        const hi  = sorted[Math.floor(sorted.length * 0.98)] || 1;
+        const rng = hi - lo || 1;
+
+        cells = new Float32Array(COLS * ROWS);
+        for (let i = 0; i < cells.length; i++) {
+          const lin = Math.max(0, Math.min(1, (rawLums[i] - lo) / rng));
+          cells[i] = Math.pow(lin, 0.65); // gamma lift: boost midtones
+        }
+      }
+
+      // ── Draw one frame at progress t (0–1), time in seconds ─────────
+      function drawFrame(t, time = 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!cells || t <= 0) return;
+
+        const cosA = Math.cos(ANGLE);
+        const sinA = Math.sin(ANGLE);
+
+        for (let y = 0; y < ROWS; y++) {
+          // Staggered waterfall: each row starts slightly later
+          const rowT = Math.max(0, Math.min(1, (t * 1.4) - (y / ROWS * 0.4)));
+          if (rowT <= 0) continue;
+
+          for (let x = 0; x < COLS; x++) {
+            const norm = cells[y * COLS + x];
+            if (norm < 0.05) continue;
+
+            // Vignette: fade over 20% from each edge
+            const VIGN = 0.20;
+            const ex = Math.min(x / (COLS * VIGN), (COLS - 1 - x) / (COLS * VIGN), 1);
+            const ey = Math.min(y / (ROWS * VIGN), (ROWS - 1 - y) / (ROWS * VIGN), 1);
+            const vign = ex * ey; // 0 at edges → 1 at center
+
+            // Pass 1 — background fill (depth/volume effect)
+            const bgAlpha = norm * norm * 0.16 * rowT * vign;
+            if (bgAlpha > 0.005) {
+              ctx.fillStyle = `rgba(226,226,226,${bgAlpha.toFixed(3)})`;
+              ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+            }
+
+            // Per-cell deterministic angle jitter (no flicker between frames)
+            const h = ((x * 127.1 + y * 311.7) & 0xffff) / 0xffff;
+            const jitter = (h - 0.5) * (24 * Math.PI / 180); // ±12°
+            const a = ANGLE + jitter;
+            const cA = Math.cos(a), sA = Math.sin(a);
+
+            // Pass 2 — diagonal line stroke
+            const cx  = x * CELL + CELL * 0.5;
+            const cy  = y * CELL + CELL * 0.5;
+            const len = norm * CELL * 1.9 * rowT;
+            if (len < 0.5) continue;
+
+            // Subtle per-cell flicker (~35% of strokes, slow sine at varied speed+phase)
+            const hf = ((x * 431.3 + y * 197.7) & 0xffff) / 0xffff;
+            const flickerDelta = hf < 0.35
+              ? 0.15 * Math.sin(time * (0.5 + hf * 1.5) * Math.PI * 2 + hf * 6.28)
+              : 0;
+            const strokeAlpha = Math.max(0, Math.min(1, norm * 0.80 * rowT * vign + flickerDelta));
+
+            ctx.lineCap   = 'round';
+            ctx.lineWidth = LINE_W;
+            ctx.beginPath();
+            ctx.moveTo(cx - cA * len * 0.5, cy - sA * len * 0.5);
+            ctx.lineTo(cx + cA * len * 0.5, cy + sA * len * 0.5);
+            ctx.strokeStyle = `rgba(226,226,226,${strokeAlpha.toFixed(3)})`;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // ── Animate progress from current value to target ─────────────
+      function animateTo(target, duration) {
+        cancelAnimationFrame(animId);
+        const startP = progress;
+        const startT = performance.now();
+        const tick   = () => {
+          const raw   = Math.min(1, (performance.now() - startT) / duration);
+          const eased = raw < 0.5 ? 2*raw*raw : -1 + (4 - 2*raw) * raw;
+          progress = startP + (target - startP) * eased;
+          drawFrame(progress);
+          if (raw < 1) {
+            animId = requestAnimationFrame(tick);
+          } else {
+            progress = target;
+            if (target === 0) {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else if (target === 1) {
+              // Reveal done → start continuous flicker loop
+              const flick = () => {
+                drawFrame(1, performance.now() / 1000);
+                flickerRaf = requestAnimationFrame(flick);
+              };
+              flickerRaf = requestAnimationFrame(flick);
+            }
+          }
+        };
+        animId = requestAnimationFrame(tick);
+      }
+
+      function show() {
+        if (visible) return;
+        visible = true;
+        section.classList.add('visible');
+        if (cells) animateTo(1, DUR_IN);
+      }
+
+      function hide() {
+        if (!visible) return;
+        visible = false;
+        section.classList.remove('visible');
+        animateTo(0, DUR_OUT);
+      }
+
+      // Use original photo (not dithered) for full luminance range
+      const src = new Image();
+      src.src = 'images/profile.jpg';
+      src.addEventListener('load', () => buildCells(src));
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 30) show();
+      }, { passive: true });
+    })();
   </script>
 
 </body>

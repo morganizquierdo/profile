@@ -521,6 +521,34 @@ body::after {
 }
 
 /* ─────────────────────────────────────────
+   ASCII Portrait
+───────────────────────────────────────── */
+.ascii-section {
+  max-height: 0;
+  opacity: 0;
+  background: #0c0d0f;
+  box-shadow: 0 0 100px 80px #0c0d0f;
+  transition:
+    max-height 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity    0.45s ease 0.15s;
+}
+
+.ascii-section.visible {
+  max-height: 620px;
+  opacity: 1;
+}
+
+.ascii-inner {
+  overflow: hidden;
+}
+
+.ascii-canvas {
+  display: block;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
    Footer & Links
 ───────────────────────────────────────── */
 .footer {
