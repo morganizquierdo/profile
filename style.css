@@ -574,7 +574,7 @@ body::after {
   background: #0c0d0f;
   box-shadow: 0 0 100px 80px #0c0d0f;
   transition: opacity 0.6s ease;
-  padding-bottom: 140px;
+  padding-bottom: 200px;
 }
 
 .ascii-section.visible {
@@ -728,5 +728,13 @@ body::after {
 
   .link-item {
     justify-content: space-between;
+  }
+
+  .ascii-section {
+    padding-bottom: 160px;
+  }
+
+  .signature {
+    height: 90px;
   }
 }
