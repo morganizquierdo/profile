@@ -346,6 +346,16 @@ body {
   font-weight: 400;
 }
 
+.project-card--soon {
+  background: #f5f5f5;
+  cursor: default;
+}
+
+.project-title--soon {
+  color: #bbb;
+  font-style: italic;
+}
+
 /* ─────────────────────────────────────────
    Projects — overlay
 ───────────────────────────────────────── */

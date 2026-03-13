@@ -118,6 +118,17 @@
           </div>
         </div>
 
+        <div class="project-card project-card--soon">
+          <div class="project-inner">
+            <div class="project-card-top">
+              <span class="project-index">02</span>
+            </div>
+            <div class="project-card-bottom">
+              <h3 class="project-title project-title--soon" data-en="Coming soon" data-fr="Bientôt">Coming soon</h3>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -294,43 +305,47 @@
       }
 
       // ── Draw one frame at progress t (0–1), time in seconds ─────────
+      const SWEEP_PERIOD = 2.8;  // secondes entre deux balayages
+      const SWEEP_W      = 0.11; // largeur de la zone boost (fraction de COLS)
+
       function drawFrame(t, time = 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (!cells || t <= 0) return;
 
-        const cosA = Math.cos(ANGLE);
-        const sinA = Math.sin(ANGLE);
+        // Position du balayage droite→gauche (fraction 0=gauche, 1=droite)
+        const sweepX = 1.0 - ((time % SWEEP_PERIOD) / SWEEP_PERIOD);
 
         for (let y = 0; y < ROWS; y++) {
-          // Staggered waterfall: each row starts slightly later
-          const rowT = Math.max(0, Math.min(1, (t * 1.4) - (y / ROWS * 0.4)));
-          if (rowT <= 0) continue;
-
           for (let x = 0; x < COLS; x++) {
             const norm = cells[y * COLS + x];
             if (norm < 0.05) continue;
 
-            // Vignette: fade over 20% from each edge
-            const VIGN = 0.20;
-            const ex = Math.min(x / (COLS * VIGN), (COLS - 1 - x) / (COLS * VIGN), 1);
-            const ey = Math.min(y / (ROWS * VIGN), (ROWS - 1 - y) / (ROWS * VIGN), 1);
-            const vign = ex * ey; // 0 at edges → 1 at center
+            // Révélation droite→gauche : colonnes de droite apparaissent en premier
+            const colFrac = (COLS - 1 - x) / COLS; // 0 à droite, 1 à gauche
+            const cellT   = Math.max(0, Math.min(1, (t * 1.4) - (colFrac * 0.4)));
+            if (cellT <= 0) continue;
 
-            // Pass 1 — background fill : seulement les zones claires (norm > 0.35), effet discret
+            // Vignette
+            const VIGN = 0.20;
+            const ex   = Math.min(x / (COLS * VIGN), (COLS - 1 - x) / (COLS * VIGN), 1);
+            const ey   = Math.min(y / (ROWS * VIGN), (ROWS - 1 - y) / (ROWS * VIGN), 1);
+            const vign = ex * ey;
+
+            // Background fill (zones claires)
             if (norm > 0.35) {
-              const bgAlpha = norm * norm * 0.07 * rowT * vign;
+              const bgAlpha = norm * norm * 0.07 * cellT * vign;
               if (bgAlpha > 0.005) {
                 ctx.fillStyle = `rgba(226,226,226,${bgAlpha.toFixed(3)})`;
                 ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
               }
             }
 
-            // Per-cell deterministic angle jitter (stable, no flicker)
-            const h = ((x * 127.1 + y * 311.7) & 0xffff) / 0xffff;
-            const jitter = (h - 0.5) * (24 * Math.PI / 180); // ±12°
+            // Jitter angulaire déterministe
+            const h      = ((x * 127.1 + y * 311.7) & 0xffff) / 0xffff;
+            const jitter = (h - 0.5) * (24 * Math.PI / 180);
 
-            // Angle drift : ~20% des traits oscillent lentement en direction (±8°)
-            const ha = ((Math.imul(x + 7, 0x9e3779b9) ^ Math.imul(y + 3, 0x6c62272e)) >>> 0) / 0xffffffff;
+            // Drift angulaire (~20% des traits)
+            const ha    = ((Math.imul(x + 7, 0x9e3779b9) ^ Math.imul(y + 3, 0x6c62272e)) >>> 0) / 0xffffffff;
             const drift = ha < 0.20
               ? (8 * Math.PI / 180) * Math.sin(time * (0.15 + ha * 0.25) * Math.PI * 2 + ha * 6.28)
               : 0;
@@ -338,23 +353,31 @@
             const a  = ANGLE + jitter + drift;
             const cA = Math.cos(a), sA = Math.sin(a);
 
-            // Pass 2 — diagonal line stroke
             const cx  = x * CELL + CELL * 0.5;
             const cy  = y * CELL + CELL * 0.5;
-            const len = norm * CELL * 1.9 * rowT;
+            const len = norm * CELL * 1.9 * cellT;
             if (len < 0.5) continue;
 
-            // Scintillement: 15% des cellules, distribution uniforme via seed précalculé
+            // Électricité : 30% des cellules, rapide et brutal
             const hf = flickerSeeds[y * COLS + x];
             let flickerDelta = 0;
-            if (hf < 0.15) {
-              const speed = 0.2 + hf * 0.6;                      // 0.2–0.8 Hz, lent
-              const phase = hf * 37.4 + x * 2.1 + y * 3.7;      // déphasage spatial fort
+            if (hf < 0.30) {
+              const speed = 2.0 + hf * 6.0;                     // 2–8 Hz, électrique
+              const phase = hf * 37.4 + x * 2.1 + y * 3.7;
               const raw   = Math.sin(time * speed * Math.PI * 2 + phase);
-              const pulse = Math.pow(Math.max(0, raw), 5);        // pic bref, off le reste du temps
-              flickerDelta = pulse * 0.55;                        // amplitude visible
+              const pulse = Math.pow(Math.max(0, raw), 7);       // pic très court
+              flickerDelta = pulse * 0.75;
             }
-            const strokeAlpha = Math.max(0, Math.min(1, norm * 0.80 * rowT * vign + flickerDelta));
+
+            // Boost du balayage droite→gauche
+            const distToSweep = Math.abs(x / COLS - sweepX);
+            const sweepBoost  = distToSweep < SWEEP_W
+              ? Math.pow(1 - distToSweep / SWEEP_W, 1.5) * 0.65 * norm
+              : 0;
+
+            const strokeAlpha = Math.max(0, Math.min(1,
+              norm * 0.80 * cellT * vign + flickerDelta + sweepBoost
+            ));
 
             ctx.lineCap   = 'round';
             ctx.lineWidth = LINE_W;
