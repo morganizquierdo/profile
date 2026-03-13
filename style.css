@@ -8,9 +8,9 @@
 }
 
 :root {
-  --bg: #0c0d0f;
+  --bg: #212121;
   --surface: #131416;
-  --border: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.22);
   --text: #e2e2e2;
   --text-muted: #666;
   --text-dim: #999;
@@ -27,15 +27,15 @@ html {
 
 ::selection {
   background-color: #f5d000;
-  color: #0c0d0f;
+  color: #212121;
 }
 
 body {
   background-color: var(--bg);
   background-image: repeating-linear-gradient(
     22deg,
-    rgba(255, 255, 255, 0.028) 0px,
-    rgba(255, 255, 255, 0.028) 1px,
+    rgba(255, 255, 255, 0.055) 0px,
+    rgba(255, 255, 255, 0.055) 1px,
     transparent 1px,
     transparent 14px
   );
@@ -46,14 +46,6 @@ body {
   overflow-x: hidden;
 }
 
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(12, 13, 15, 0.92) 0%, transparent 100%);
-}
 
 /* ─────────────────────────────────────────
    Noise overlay
@@ -68,9 +60,9 @@ body::after {
 .container {
   position: relative;
   z-index: 1;
-  max-width: 680px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 72px 24px 80px;
+  padding: 48px 24px 80px;
   display: flex;
   flex-direction: column;
   gap: 64px;
@@ -131,14 +123,15 @@ body::after {
 .lang-btn {
   background: none;
   border: none;
+  border-bottom: 2px solid transparent;
   color: var(--text-muted);
   font-family: var(--font);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 4px 0 2px;
   letter-spacing: 0.04em;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .lang-btn:hover {
@@ -147,6 +140,7 @@ body::after {
 
 .lang-btn.active {
   color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
 /* ─────────────────────────────────────────
@@ -210,10 +204,10 @@ body::after {
 
 .section-label {
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* ─────────────────────────────────────────
@@ -223,19 +217,21 @@ body::after {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
 }
 
 .exp-item {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  transition: border-color 0.2s ease;
 }
 
-.exp-item:first-child {
-  border-top: 1px solid var(--border);
+.exp-item:hover {
+  border-color: rgba(255, 255, 255, 0.38);
 }
 
 .exp-meta {
@@ -282,16 +278,16 @@ body::after {
 }
 
 .project-card {
-  border: 1px solid var(--border);
+  background: #fff;
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .project-card:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.02);
+  background: #f5f5f5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
 }
 
 .project-inner {
@@ -311,17 +307,17 @@ body::after {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: #999;
 }
 
 .project-arrow {
-  color: var(--text-muted);
+  color: #bbb;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .project-card:hover .project-arrow {
   transform: translate(2px, -2px);
-  color: var(--accent);
+  color: #111;
 }
 
 .project-thumb {
@@ -340,13 +336,13 @@ body::after {
 .project-title {
   font-size: 16px;
   font-weight: 500;
-  color: var(--accent);
+  color: #111;
   letter-spacing: -0.01em;
 }
 
 .project-desc {
   font-size: 13px;
-  color: var(--text-muted);
+  color: #666;
   font-weight: 400;
 }
 
@@ -538,43 +534,26 @@ body::after {
 }
 
 /* ─────────────────────────────────────────
-   ASCII Portrait
+   Hero section
 ───────────────────────────────────────── */
-.hero-wrapper {
-  position: relative;
+.hero-section {
+  padding: 32px 24px 0;
 }
 
-.hero-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0;
-  pointer-events: none;
+.hero-header-wrap {
+  padding-bottom: 16px;
 }
 
-.hero-content .section-tagline {
-  padding-bottom: 24px;
-}
-
-.hero-content .header,
-.hero-content .section-tagline {
-  pointer-events: auto;
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
 }
 
 .ascii-section {
-  position: sticky;
-  top: 0;
   opacity: 0;
-  background: #0c0d0f;
-  box-shadow: 0 0 100px 80px #0c0d0f;
   transition: opacity 0.6s ease;
-  padding-bottom: 200px;
 }
 
 .ascii-section.visible {
@@ -583,12 +562,33 @@ body::after {
 
 .ascii-inner {
   overflow: hidden;
+  border-radius: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.85);
+  background: #212121;
 }
 
 .ascii-canvas {
   display: block;
-  max-width: 100%;
+  width: 100%;
   pointer-events: none;
+}
+
+/* Droite : bento blanc */
+.hero-text {
+  background: #fff;
+  border-radius: 48px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hero-text .tagline {
+  color: #111;
+}
+
+.hero-text .signature {
+  filter: invert(1);
 }
 
 /* ─────────────────────────────────────────
@@ -616,7 +616,7 @@ body::after {
   font-size: 14px;
   font-weight: 400;
   padding: 10px 14px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 10px;
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   letter-spacing: -0.01em;
@@ -624,7 +624,7 @@ body::after {
 
 .link-item:hover {
   color: var(--accent);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -712,6 +712,16 @@ body::after {
 /* ─────────────────────────────────────────
    Responsive
 ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-text {
+    min-height: 320px;
+  }
+}
+
 @media (max-width: 540px) {
   .container {
     padding: 48px 20px 64px;
@@ -730,8 +740,8 @@ body::after {
     justify-content: space-between;
   }
 
-  .ascii-section {
-    padding-bottom: 160px;
+  .hero-text {
+    padding: 32px;
   }
 
   .signature {

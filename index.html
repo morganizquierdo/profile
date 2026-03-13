@@ -12,34 +12,38 @@
   <div class="noise"></div>
 
 
-  <main class="container">
+  <!-- Hero : plus large que le container, hors flux -->
+  <div class="hero-section">
 
-    <!-- Hero : canvas en fond + contenu par-dessus -->
-    <div class="hero-wrapper">
+    <!-- Entête : hors du bento -->
+    <div class="hero-header-wrap">
+      <header class="header">
+        <div class="header-left">
+          <div class="header-info">
+            <h1>Morgan Izquierdo</h1>
+            <span class="location">Paris, France</span>
+          </div>
+        </div>
+        <nav class="lang-switcher">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <span class="lang-sep">/</span>
+          <button class="lang-btn" data-lang="fr">FR</button>
+        </nav>
+      </header>
+    </div>
 
-      <!-- ASCII Portrait : en flux, détermine la hauteur du hero -->
+    <!-- Split hero : portrait gauche | tagline droite -->
+    <div class="hero-split">
+
+      <!-- Gauche : portrait avec contour blanc -->
       <div class="ascii-section" id="asciiSection">
         <div class="ascii-inner">
           <canvas class="ascii-canvas" id="asciiCanvas"></canvas>
         </div>
       </div>
 
-      <!-- Contenu superposé -->
-      <div class="hero-content">
-        <header class="header">
-          <div class="header-left">
-            <div class="header-info">
-              <h1>Morgan Izquierdo</h1>
-              <span class="location">Paris, France</span>
-            </div>
-          </div>
-          <nav class="lang-switcher">
-            <button class="lang-btn active" data-lang="en">EN</button>
-            <span class="lang-sep">/</span>
-            <button class="lang-btn" data-lang="fr">FR</button>
-          </nav>
-        </header>
-
+      <!-- Droite : tagline + signature sur fond blanc -->
+      <div class="hero-text">
         <section class="section-tagline">
           <p class="tagline">
             <span class="tagline-bold" data-en="Leading with clarity" data-fr="La clarté comme boussole">Leading with clarity</span><span class="tagline-serif" data-en=" — designing focus for product design teams in fast-moving environments." data-fr=" — définir le focus des équipes design dans les environnements qui bougent vite."> — designing focus for product design teams in fast-moving environments.</span>
@@ -49,6 +53,10 @@
       </div>
 
     </div>
+
+  </div>
+
+  <main class="container">
 
     <!-- Experience -->
     <section class="section">
@@ -219,11 +227,6 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
 
-    // Cursor spotlight
-    document.addEventListener('mousemove', (e) => {
-      document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
-      document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
-    });
 
     // ── Line Hatching Portrait (canvas) ──────────────────────────────
     (function () {
