@@ -118,7 +118,24 @@ The palette is intentionally neutral.
 
 Do not add a new hue unless it represents project content inside an image.
 
-## 6. Shape and depth
+## 6. Background
+
+- Use a fixed ghost grid aligned to the readable content frame.
+- Desktop and tablet use `12` vertical columns.
+- The decorative grid and content grid share the same `24px` gutter token.
+- Decorative column starts repeat at `column width + gutter`, not at `container width / 12`.
+- Column starts use a vertical dotted rhythm rather than continuous rules.
+- Real gutters receive a subtle `135deg` hatch pattern.
+- Construction guides remain monochrome.
+- Mobile uses `4` vertical columns.
+- Horizontal guides use a wider rhythm: `96px` desktop and `80px` mobile.
+- Dots remain below `6%` white opacity.
+- Gutter hatching remains below `3%` white opacity.
+- Horizontal and frame guides remain below `4%` white opacity.
+- Add a monochrome noise texture at very low opacity to soften the technical quality of the grid.
+- Opaque cards naturally hide the grid; do not add extra masks around content.
+
+## 7. Shape and depth
 
 - Large surface radius: `48px` for hero panels, cards, overlay panels and large previews
 - Media radius: `32px` for images, videos and media areas
@@ -130,7 +147,7 @@ Do not add a new hue unless it represents project content inside an image.
 - Cards use contrast and a small `translateY(-4px)` interaction instead of decorative shadows.
 - Avoid cards inside cards. A media area is part of its parent card, not a nested card.
 
-## 7. Section pattern
+## 8. Section pattern
 
 Each major content section uses:
 
@@ -141,16 +158,20 @@ Each major content section uses:
 
 On mobile, the introduction moves above the series.
 
-## 8. Experience cards
+## 9. Experience cards
 
 - Cards form a vertical stack in the content side of the section grid
-- Desktop cards use a compact row layout
-- Mobile cards move the company and role below the period
-- Order: period, company, role, index
-- Period uses a neutral pill
+- Each card is a single edge-to-edge surface split into two zones
+- Desktop uses a horizontal composition: period panel on the left, content panel on the right
+- The left panel uses the period tag's light gray surface
+- The right panel is white and contains company, role and index
+- There is no gap or outer padding between the zones
+- The white panel overlaps the gray panel by `24px` and carries the rounded intersection
+- The Instrument Serif index appears in white inside a dark circular marker
+- Mobile stacks the zones vertically and keeps the same `24px` overlap
 - Do not invent company imagery or logos without a meaningful source
 
-## 9. Project cards
+## 10. Project cards
 
 - Two columns on wide screens
 - One column on tablet
@@ -161,7 +182,7 @@ On mobile, the introduction moves above the series.
 - The media block repeats the card radius on its upper corners
 - Entire card opens the project detail overlay
 
-## 10. Responsive behavior
+## 11. Responsive behavior
 
 ### Desktop: above `1024px`
 
@@ -182,7 +203,7 @@ On mobile, the introduction moves above the series.
 - A partial next card should remain visible to communicate scrollability
 - Page content must not create horizontal document overflow
 
-## 11. Interaction and accessibility
+## 12. Interaction and accessibility
 
 - Interactive cards are keyboard focusable.
 - `Enter` and `Space` open project overlays.
