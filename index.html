@@ -67,9 +67,10 @@
       </div>
 
       <ul class="exp-list">
-        <li class="exp-item">
+        <li class="exp-item" data-experience="wecasa" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
             <span class="exp-period" data-en="2025 — Present" data-fr="2025 — Présent">2025 — Present</span>
+            <img class="exp-logo" src="images/companies/wecasa.png" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -79,9 +80,10 @@
             <span class="exp-index">01</span>
           </div>
         </li>
-        <li class="exp-item">
+        <li class="exp-item" data-experience="ankorstore" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
-            <span class="exp-period">2022 — 2024</span>
+            <span class="exp-period">2022 — 2025</span>
+            <img class="exp-logo" src="images/companies/ankorstore.png" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -91,9 +93,10 @@
             <span class="exp-index">02</span>
           </div>
         </li>
-        <li class="exp-item">
+        <li class="exp-item" data-experience="orange" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
-            <span class="exp-period">2018 — 2020</span>
+            <span class="exp-period">2017 — 2019</span>
+            <img class="exp-logo" src="images/companies/orange.ico" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -103,9 +106,10 @@
             <span class="exp-index">03</span>
           </div>
         </li>
-        <li class="exp-item">
+        <li class="exp-item" data-experience="etsy" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
             <span class="exp-period">2016 — 2017</span>
+            <img class="exp-logo" src="images/companies/etsy.png" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -115,9 +119,10 @@
             <span class="exp-index">04</span>
           </div>
         </li>
-        <li class="exp-item">
+        <li class="exp-item" data-experience="shopmium" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
             <span class="exp-period">2012 — 2016</span>
+            <img class="exp-logo" src="images/companies/shopmium.png" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -128,6 +133,49 @@
           </div>
         </li>
       </ul>
+    </section>
+
+    <!-- Experience detail page -->
+    <div class="experience-overlay" id="experienceOverlay" aria-hidden="true">
+      <div class="experience-backdrop"></div>
+      <article class="experience-page" role="dialog" aria-modal="true" aria-labelledby="experienceTitle">
+        <button class="experience-close" type="button" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="experience-scroll">
+          <header class="experience-header">
+            <div class="experience-header-meta">
+              <span class="experience-context" id="experienceContext"></span>
+              <span class="experience-period-detail" id="experiencePeriod"></span>
+            </div>
+            <div class="experience-header-main">
+              <div class="experience-heading">
+                <img class="experience-logo" id="experienceLogo" src="" alt="">
+                <div>
+                  <p class="experience-role-detail" id="experienceRole"></p>
+                  <h2 class="experience-title" id="experienceTitle"></h2>
+                </div>
+              </div>
+            </div>
+            <p class="experience-summary" id="experienceSummary"></p>
+          </header>
+
+          <div class="experience-themes" id="experienceThemes"></div>
+
+          <section class="experience-projects" id="experienceProjects" hidden>
+            <header class="experience-projects-header">
+              <span class="experience-projects-label" id="experienceProjectsLabel"></span>
+              <h2 class="experience-projects-title" id="experienceProjectsTitle"></h2>
+            </header>
+            <div class="experience-projects-list" id="experienceProjectsList"></div>
+          </section>
+        </div>
+      </article>
+    </div>
+
+    <!-- Principle -->
+    <section class="principle-section" aria-label="Design principle">
+      <p class="principle-statement">Just because 🧲 you can’t solve a <span class="principle-serif">problem</span> completely ⛰️ doesn’t mean 🚫 you shouldn’t try 🛠️ to reduce its <span class="principle-serif">impact</span>. 🌊</p>
     </section>
 
     <!-- Projects -->
@@ -295,18 +343,411 @@
   <script>
     const btns = document.querySelectorAll('.lang-btn');
     const translatables = document.querySelectorAll('[data-en]');
+    let currentLang = 'en';
+    let activeExperience = null;
+
+    const experienceData = {
+      wecasa: {
+        index: '01',
+        company: 'Wecasa',
+        icon: 'images/companies/wecasa.png',
+        role: { en: 'Design Lead', fr: 'Design Lead' },
+        period: { en: '2025 — Present', fr: '2025 — Présent' },
+        context: { en: 'Current focus', fr: 'Priorités actuelles' },
+        summary: {
+          en: 'A player-coach role focused on making the design organization more intentional while staying close to the product work. The mandate combines team development, product simplification, cross-functional alignment and a higher quality bar.',
+          fr: "Un rôle de player-coach pour rendre l'organisation design plus intentionnelle tout en restant proche du produit. Le mandat associe développement de l'équipe, simplification du produit, alignement transverse et élévation du niveau de qualité."
+        },
+        themes: [
+          {
+            title: { en: 'Lead through the work', fr: 'Diriger au contact du travail' },
+            copy: {
+              en: 'Set clearer expectations for designers, create deliberate growth paths and shift ownership toward higher-leverage contributions. Stay close to reviews and delivery so direction remains grounded in the craft.',
+              fr: "Clarifier les attentes, construire des trajectoires de progression et déplacer la responsabilité vers des contributions à plus fort levier. Rester proche des revues et de la livraison pour ancrer la direction dans la pratique."
+            }
+          },
+          {
+            title: { en: 'Shape the team for what comes next', fr: "Préparer l'équipe aux prochains enjeux" },
+            copy: {
+              en: 'Anticipate capacity needs, bring in flexible expertise where it creates leverage and establish a demanding quality loop for an emerging product area.',
+              fr: "Anticiper les besoins de capacité, faire appel à une expertise flexible là où elle crée du levier et installer une boucle de qualité exigeante pour un nouveau périmètre produit."
+            }
+          },
+          {
+            title: { en: 'Make the professional experience simpler', fr: "Simplifier l'expérience professionnelle" },
+            copy: {
+              en: 'Frame simplification as a product strategy rather than a cosmetic clean-up. Align priorities with product partners, sequence the changes and aim for meaningful improvements to core workflows.',
+              fr: "Traiter la simplification comme une stratégie produit plutôt qu'un nettoyage cosmétique. Aligner les priorités avec les partenaires produit, séquencer les changements et améliorer significativement les parcours essentiels."
+            }
+          },
+          {
+            title: { en: 'Raise the bar systematically', fr: "Élever le niveau de façon systémique" },
+            copy: {
+              en: 'Bring content into the design process earlier, translate a refreshed brand into useful product guidance and evolve the design system through clearer tokens and simpler patterns.',
+              fr: "Intégrer le contenu plus tôt dans le processus, traduire une identité renouvelée en principes produit utiles et faire évoluer le design system avec des tokens plus clairs et des patterns plus simples."
+            }
+          }
+        ],
+        projects: [
+          {
+            title: {
+              en: 'Simplifying the professional app',
+              fr: "Simplifier l'application professionnelle"
+            },
+            meta: {
+              en: 'Product audit · Information hierarchy',
+              fr: "Audit produit · Hiérarchie de l'information"
+            },
+            copy: {
+              en: 'An audit and collaborative design effort to make the professional experience easier to scan and act on. The work rebuilt hierarchy across key screens, including home and account, and reconsidered how service communications enter the product.',
+              fr: "Un audit et un travail de conception collectif pour rendre l'expérience professionnelle plus simple à parcourir et à utiliser. Le projet a reconstruit la hiérarchie des écrans clés, notamment l'accueil et le compte, et repensé la manière dont les communications du service apparaissent dans le produit."
+            },
+            contribution: {
+              en: 'Framing, audit, design direction and collective facilitation',
+              fr: 'Cadrage, audit, direction design et facilitation collective'
+            },
+            layout: 'portrait',
+            images: [
+              {
+                src: 'images/experience/wecasa/pro-app-account.png',
+                alt: {
+                  en: 'Redesigned account screen for the professional app',
+                  fr: "Écran compte repensé pour l'application professionnelle"
+                }
+              }
+            ]
+          },
+          {
+            title: {
+              en: 'Translating a brand into product',
+              fr: 'Traduire une marque dans le produit'
+            },
+            meta: {
+              en: 'Product branding · Cross-functional rollout',
+              fr: 'Branding produit · Déploiement transverse'
+            },
+            copy: {
+              en: 'A fresh visual direction across acquisition pages and applications. I orchestrated the translation of brand principles into a coherent product language, brought in a design specialist for selected landing-page sections, and coordinated brand and engineering through rollout.',
+              fr: "Une nouvelle direction visuelle pour les pages d'acquisition et les applications. J'ai orchestré la traduction des principes de marque en un langage produit cohérent, fait appel à une expertise design pour certaines sections clés des landing pages, puis coordonné la marque et l'ingénierie pendant le déploiement."
+            },
+            contribution: {
+              en: 'Product brand direction, specialist hiring and rollout coordination',
+              fr: 'Direction de marque produit, recrutement spécialiste et coordination du déploiement'
+            },
+            layout: 'wide',
+            images: [
+              {
+                src: 'images/experience/wecasa/rebrand-landing.png',
+                alt: {
+                  en: 'Rebranded acquisition landing page',
+                  fr: "Landing page d'acquisition après le rebranding"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      ankorstore: {
+        index: '02',
+        company: 'Ankorstore',
+        icon: 'images/companies/ankorstore.png',
+        role: { en: 'Design Lead', fr: 'Design Lead' },
+        period: { en: '2022 — 2025', fr: '2022 — 2025' },
+        context: { en: 'Selected scope', fr: 'Périmètre choisi' },
+        summary: {
+          en: 'A combined design leadership and hands-on product role across new business models, zero-to-one services and team development.',
+          fr: "Un rôle associant leadership design et contribution produit directe, entre nouveaux modèles économiques, services de zéro à un et développement d'équipe."
+        },
+        themes: [
+          {
+            title: { en: 'Create beyond the core platform', fr: 'Créer au-delà de la plateforme principale' },
+            copy: {
+              en: 'Led the end-to-end design of a standalone business service outside the core marketplace, turning complex transaction and delivery flows into one coherent experience.',
+              fr: "Pilotage du design de bout en bout d'un service professionnel autonome, hors de la marketplace principale, pour transformer des flux complexes de transaction et de livraison en une expérience cohérente."
+            }
+          },
+          {
+            title: { en: 'Turn monetization into product value', fr: 'Transformer la monétisation en valeur produit' },
+            copy: {
+              en: 'Designed a new revenue capability from research through implementation, balancing business goals, partner needs and the dynamics of a two-sided platform.',
+              fr: "Conception d'un nouveau levier de revenus, de la recherche à l'implémentation, en équilibrant objectifs business, besoins partenaires et dynamique d'une plateforme biface."
+            }
+          },
+          {
+            title: { en: 'Build a team operating system', fr: "Construire le système d'une équipe" },
+            copy: {
+              en: 'Supported a small multidisciplinary design and research group, made expectations and growth explicit, and created reusable frameworks for hiring, goals and reviews.',
+              fr: "Accompagnement d'une petite équipe pluridisciplinaire de design et de recherche, explicitation des attentes et de la progression, puis création de cadres réutilisables pour le recrutement, les objectifs et les revues."
+            }
+          },
+          {
+            title: { en: 'Align the service across teams', fr: 'Aligner le service entre les équipes' },
+            copy: {
+              en: 'Set cross-product UX direction and used service mapping to align product, design, engineering and stakeholders around the end-to-end experience.',
+              fr: "Définition d'une direction UX transverse et usage de la cartographie de service pour aligner produit, design, ingénierie et parties prenantes sur l'expérience de bout en bout."
+            }
+          }
+        ]
+      },
+      orange: {
+        index: '03',
+        company: 'Orange',
+        icon: 'images/companies/orange.ico',
+        role: { en: 'Product Designer', fr: 'Product Designer' },
+        period: { en: '2017 — 2019', fr: '2017 — 2019' },
+        context: { en: 'Selected scope', fr: 'Périmètre choisi' },
+        summary: {
+          en: 'A service-design mission inside a balanced product team, focused on making business support clearer for customers and more sustainable for internal contributors.',
+          fr: "Une mission de service design au sein d'une équipe produit équilibrée, pour rendre le support professionnel plus clair côté client et plus soutenable côté contributeurs internes."
+        },
+        themes: [
+          {
+            title: { en: 'Design the service, not only the interface', fr: "Concevoir le service, pas seulement l'interface" },
+            copy: {
+              en: 'Connected the customer support journey with the internal workflow and tools required to create, maintain and distribute useful content.',
+              fr: "Connexion du parcours de support client avec les processus et outils internes nécessaires pour créer, maintenir et diffuser un contenu utile."
+            }
+          },
+          {
+            title: { en: 'Make learning part of delivery', fr: "Intégrer l'apprentissage à la livraison" },
+            copy: {
+              en: 'Used interviews, usability tests, synthesis, competitive reviews and experiments to make evidence a regular input to product decisions.',
+              fr: "Usage d'entretiens, tests d'utilisabilité, synthèses, analyses concurrentielles et expérimentations pour faire de la preuve un apport régulier aux décisions produit."
+            }
+          },
+          {
+            title: { en: 'Work as a balanced team', fr: 'Travailler en équipe équilibrée' },
+            copy: {
+              en: 'Worked closely with product and engineering in a shared backlog, applying Lean principles and treating discovery and delivery as one continuous loop.',
+              fr: "Collaboration étroite avec le produit et l'ingénierie autour d'un backlog partagé, en appliquant les principes Lean et en réunissant discovery et delivery dans une même boucle."
+            }
+          },
+          {
+            title: { en: 'Grow design fluency', fr: 'Développer la culture design' },
+            copy: {
+              en: 'Established regular critique, ideation and retrospective rituals so the broader team could participate in design decisions with more confidence.',
+              fr: "Mise en place de rituels réguliers de critique, idéation et rétrospective pour permettre à toute l'équipe de contribuer aux décisions de design avec davantage d'assurance."
+            }
+          }
+        ]
+      },
+      etsy: {
+        index: '04',
+        company: 'Etsy',
+        icon: 'images/companies/etsy.png',
+        role: { en: 'Product Designer · a Little Market', fr: 'Product Designer · a Little Market' },
+        period: { en: '2016 — 2017', fr: '2016 — 2017' },
+        context: { en: 'Selected scope', fr: 'Périmètre choisi' },
+        summary: {
+          en: 'A product design role combining research, interaction and visual direction during the evolution of a multi-product marketplace.',
+          fr: "Un rôle de product design mêlant recherche, interaction et direction visuelle pendant l'évolution d'une marketplace multi-produit."
+        },
+        themes: [
+          {
+            title: { en: 'Turn research into direction', fr: 'Transformer la recherche en direction' },
+            copy: {
+              en: 'Combined interviews, feedback synthesis, expert reviews, analytics and competitive analysis to frame opportunities and define product requirements.',
+              fr: "Combinaison d'entretiens, synthèse des retours, revues expertes, données et analyse concurrentielle pour cadrer les opportunités et définir les besoins produit."
+            }
+          },
+          {
+            title: { en: 'Build a practical UI kit', fr: 'Construire un UI kit opérationnel' },
+            copy: {
+              en: 'Defined a new visual direction, strengthened reusable patterns and created a practical UI kit to help the product team work more consistently.',
+              fr: "Définition d'une nouvelle direction visuelle, renforcement des patterns réutilisables et création d'un UI kit opérationnel pour aider l'équipe produit à travailler de façon plus cohérente."
+            }
+          },
+          {
+            title: { en: 'Evolve without stopping delivery', fr: 'Faire évoluer sans arrêter de livrer' },
+            copy: {
+              en: 'Broke a broad redesign into meaningful stages, using each release to improve the experience while preparing a more coherent destination.',
+              fr: "Découpage d'une refonte large en étapes utiles, chaque livraison améliorant l'expérience tout en préparant une destination plus cohérente."
+            }
+          }
+        ]
+      },
+      shopmium: {
+        index: '05',
+        company: 'Shopmium',
+        icon: 'images/companies/shopmium.png',
+        role: { en: 'Startup Designer', fr: 'Startup Designer' },
+        period: { en: '2012 — 2016', fr: '2012 — 2016' },
+        context: { en: 'Selected scope', fr: 'Périmètre choisi' },
+        summary: {
+          en: 'A broad startup design role spanning brand, product, operations and the first steps of a design team.',
+          fr: "Un rôle de designer en startup couvrant la marque, le produit, les opérations et les premières étapes d'une équipe design."
+        },
+        themes: [
+          {
+            title: { en: 'Own the experience end to end', fr: "Prendre en charge l'expérience de bout en bout" },
+            copy: {
+              en: 'Worked across mobile and web experience, rapid prototyping, strategic research and the product material needed to support commercial conversations.',
+              fr: "Intervention sur les expériences mobile et web, le prototypage rapide, la recherche stratégique et les supports produit nécessaires aux échanges commerciaux."
+            }
+          },
+          {
+            title: { en: 'Connect brand and product', fr: 'Relier marque et produit' },
+            copy: {
+              en: 'Built a recognizable identity through imagery, iconography, typography and merchandising, then carried that language into the digital product.',
+              fr: "Construction d'une identité reconnaissable par l'image, l'iconographie, la typographie et le merchandising, puis traduction de ce langage dans le produit numérique."
+            }
+          },
+          {
+            title: { en: 'Build leverage early', fr: 'Créer du levier tôt' },
+            copy: {
+              en: 'Automated recurring design work, structured external production and helped a small group of junior designers grow into broader ownership.',
+              fr: "Automatisation du travail récurrent, structuration de la production externe et accompagnement de designers juniors vers une responsabilité plus large."
+            }
+          }
+        ]
+      }
+    };
 
     function setLang(lang) {
+      currentLang = lang;
       translatables.forEach(el => {
         if (el.dataset[lang]) el.textContent = el.dataset[lang];
       });
       btns.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
       document.documentElement.lang = lang;
+      if (activeExperience) renderExperience(activeExperience);
     }
 
     btns.forEach(btn => {
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
+
+    // Experience pages
+    const experienceOverlay = document.getElementById('experienceOverlay');
+    const experiencePage = experienceOverlay.querySelector('.experience-page');
+    const experienceTriggers = document.querySelectorAll('[data-experience]');
+    let experienceReturnFocus = null;
+
+    function renderExperience(key) {
+      const experience = experienceData[key];
+      if (!experience) return;
+
+      document.getElementById('experienceContext').textContent = experience.context[currentLang];
+      document.getElementById('experiencePeriod').textContent = experience.period[currentLang];
+      document.getElementById('experienceRole').textContent = experience.role[currentLang];
+      document.getElementById('experienceTitle').textContent = experience.company;
+      document.getElementById('experienceLogo').src = experience.icon;
+      document.getElementById('experienceSummary').textContent = experience.summary[currentLang];
+
+      const themes = document.getElementById('experienceThemes');
+      themes.replaceChildren(...experience.themes.slice(0, 3).map(theme => {
+        const section = document.createElement('section');
+        section.className = 'experience-theme';
+
+        const title = document.createElement('h3');
+        title.className = 'experience-theme-title';
+        title.textContent = theme.title[currentLang];
+
+        section.append(title);
+        return section;
+      }));
+
+      const projectsSection = document.getElementById('experienceProjects');
+      const projects = experience.projects || [];
+      projectsSection.hidden = projects.length === 0;
+
+      if (projects.length) {
+        document.getElementById('experienceProjectsLabel').textContent =
+          currentLang === 'fr' ? 'Projets sélectionnés' : 'Selected projects';
+        document.getElementById('experienceProjectsTitle').textContent =
+          currentLang === 'fr' ? 'Du système au détail.' : 'From system to detail.';
+
+        const projectsList = document.getElementById('experienceProjectsList');
+        projectsList.replaceChildren(...projects.map((project, index) => {
+          const article = document.createElement('article');
+          article.className = `experience-project experience-project--${project.layout}`;
+
+          const header = document.createElement('header');
+          header.className = 'experience-project-header';
+
+          const number = document.createElement('span');
+          number.className = 'experience-project-index';
+          number.textContent = String(index + 1).padStart(2, '0');
+
+          const text = document.createElement('div');
+          text.className = 'experience-project-text';
+
+          const meta = document.createElement('p');
+          meta.className = 'experience-project-meta';
+          meta.textContent = project.meta[currentLang];
+
+          const title = document.createElement('h3');
+          title.className = 'experience-project-title';
+          title.textContent = project.title[currentLang];
+
+          const copy = document.createElement('p');
+          copy.className = 'experience-project-copy';
+          copy.textContent = project.copy[currentLang];
+
+          const contribution = document.createElement('p');
+          contribution.className = 'experience-project-contribution';
+          contribution.textContent = `${currentLang === 'fr' ? 'Contribution' : 'Contribution'} — ${project.contribution[currentLang]}`;
+
+          text.append(meta, title, copy, contribution);
+          header.append(number, text);
+
+          const media = document.createElement('div');
+          media.className = 'experience-project-media';
+
+          project.images.forEach(image => {
+            const figure = document.createElement('figure');
+            figure.className = 'experience-project-figure';
+
+            const img = document.createElement('img');
+            img.src = image.src;
+            img.alt = image.alt[currentLang];
+            img.loading = 'lazy';
+
+            figure.append(img);
+            media.append(figure);
+          });
+
+          article.append(header, media);
+          return article;
+        }));
+      } else {
+        document.getElementById('experienceProjectsList').replaceChildren();
+      }
+    }
+
+    function openExperience(key, trigger) {
+      activeExperience = key;
+      experienceReturnFocus = trigger;
+      renderExperience(key);
+      experienceOverlay.classList.add('open');
+      experienceOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      experiencePage.querySelector('.experience-scroll').scrollTop = 0;
+      experienceOverlay.querySelector('.experience-close').focus();
+    }
+
+    function closeExperience() {
+      if (!experienceOverlay.classList.contains('open')) return;
+      experienceOverlay.classList.remove('open');
+      experienceOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      activeExperience = null;
+      if (experienceReturnFocus) experienceReturnFocus.focus();
+    }
+
+    experienceTriggers.forEach(trigger => {
+      const open = () => openExperience(trigger.dataset.experience, trigger);
+      trigger.addEventListener('click', open);
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      });
+    });
+
+    experienceOverlay.querySelector('.experience-close').addEventListener('click', closeExperience);
+    experienceOverlay.querySelector('.experience-backdrop').addEventListener('click', closeExperience);
 
     // Project overlays
     const overlays = document.querySelectorAll('.project-overlay');
@@ -344,7 +785,12 @@
 
     bindOverlay('openCalembours', 'overlayCalembours');
     bindOverlay('openPrevue', 'overlayPrevue');
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlays(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeExperience();
+        closeOverlays();
+      }
+    });
 
 
 

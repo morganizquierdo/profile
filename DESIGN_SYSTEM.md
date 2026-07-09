@@ -87,6 +87,9 @@ All type sizes use semantic CSS tokens. Do not introduce a raw size in a compone
 | `type-tagline` | `28–38px` | Hero tagline |
 | `type-project` | `34–52px` | Project card title |
 | `type-overlay` | `40–56px` | Project overlay title |
+| `type-experience-theme` | `32–38px` | Experience detail theme |
+| `type-experience-title` | `52–88px` | Experience detail company |
+| `type-case-study` | `38–52px` | Experience project title |
 | `type-section` | `38–60px` | Section statement |
 
 Responsive section statements use `42px` on mobile and `36px` on compact mobile screens.
@@ -168,6 +171,8 @@ On mobile, the introduction moves above the series.
 - There is no gap or outer padding between the zones
 - The white panel overlaps the gray panel by `24px` and carries the rounded intersection
 - The Instrument Serif index appears in white inside a dark circular marker
+- Official company icons appear in the gray period panel at `24px`, with a `4px` radius and grayscale treatment
+- Keep company icons local, square and visually normalized to the same dimensions
 - Mobile stacks the zones vertically and keeps the same `24px` overlap
 - Do not invent company imagery or logos without a meaningful source
 
@@ -182,7 +187,28 @@ On mobile, the introduction moves above the series.
 - The media block repeats the card radius on its upper corners
 - Entire card opens the project detail overlay
 
-## 11. Responsive behavior
+## 11. Experience detail pages
+
+- Experience cards open a contextual page rather than a side drawer
+- The page occupies almost the full viewport while preserving a visible, blurred edge of the profile behind it
+- Use one shared page structure for every role: context and period, company and role, concise summary, then three or four numbered themes
+- Present current work as areas of focus; do not imply that unfinished objectives are completed outcomes
+- Past work is organized around responsibilities and transformations rather than exhaustive task lists
+- Keep company names and public role context, but remove internal project names, team names, personal names, precise staffing figures and sensitive metrics
+- The header is a full-width dark band; themes are unframed horizontal bands separated by rules
+- Repeat the official company icon in the detail header to preserve continuity with its card
+- Do not show empty media placeholders. Add project imagery only when a real, useful asset is available
+- Instrument Serif remains limited to Experience numbering within this component
+
+### Selected work
+
+- Concrete project work may follow the role themes as a separate dark editorial chapter
+- Each project pairs concise context, contribution and real work imagery
+- Portrait product captures use a text/image split on desktop and stack on mobile
+- Wide visual work uses full-width media so composition and hierarchy remain legible
+- Keep project descriptions focused on the design problem, the intervention and the designer's contribution
+
+## 12. Responsive behavior
 
 ### Desktop: above `1024px`
 
@@ -203,10 +229,10 @@ On mobile, the introduction moves above the series.
 - A partial next card should remain visible to communicate scrollability
 - Page content must not create horizontal document overflow
 
-## 12. Interaction and accessibility
+## 13. Interaction and accessibility
 
 - Interactive cards are keyboard focusable.
-- `Enter` and `Space` open project overlays.
+- `Enter` and `Space` open project overlays and Experience pages.
 - `Escape`, backdrop click and the close button dismiss overlays.
 - Hover and focus-visible states should communicate the same hierarchy.
 - Images that are purely decorative use an empty `alt`.
