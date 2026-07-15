@@ -419,7 +419,7 @@ body::after {
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
-  border-radius: 4px;
+  border-radius: 16px;
   object-fit: cover;
   filter: grayscale(1);
 }
@@ -534,18 +534,18 @@ body::after {
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(17, 17, 17, 0.12);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: rgba(17, 17, 17, 0.05);
+  color: #111;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .experience-close:hover,
 .experience-close:focus-visible {
-  background: #fff;
-  color: #111;
+  background: #111;
+  color: #fff;
   outline: none;
 }
 
@@ -557,21 +557,22 @@ body::after {
 
 .experience-header {
   min-height: 520px;
-  padding: 56px;
-  border-radius: 0 0 var(--radius-surface) var(--radius-surface);
-  background: #151515;
-  color: #fff;
+  padding: 0;
+  border-radius: 0;
+  background: #e2e2e2;
+  color: #111;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 64px;
+  justify-content: flex-start;
+  gap: 0;
 }
 
 .experience-header-meta {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-right: 72px;
+  min-height: 172px;
+  padding: 56px 128px 80px 56px;
 }
 
 .experience-context {
@@ -579,9 +580,9 @@ body::after {
   align-items: center;
   min-height: 28px;
   padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(17, 17, 17, 0.1);
   border-radius: var(--radius-pill);
-  color: #999;
+  color: #666;
   font-size: var(--type-meta);
   font-weight: 500;
   text-transform: uppercase;
@@ -592,12 +593,26 @@ body::after {
   display: block;
   padding: 0;
   text-align: left;
-  color: #999;
+  color: #666;
   font-size: var(--type-meta);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.experience-header-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 56px;
+  margin-top: -48px;
+  padding: 56px;
+  border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+  background: #fff;
 }
 
 .experience-header-main {
@@ -619,13 +634,13 @@ body::after {
   width: 72px;
   height: 72px;
   flex: 0 0 72px;
-  border-radius: var(--radius-control);
+  border-radius: 16px;
   object-fit: cover;
 }
 
 .experience-role-detail {
   margin-bottom: 12px;
-  color: #999;
+  color: #666;
   font-size: var(--type-body);
 }
 
@@ -640,7 +655,7 @@ body::after {
   max-width: 820px;
   font-size: 23px;
   line-height: 1.4;
-  color: #c8c8c8;
+  color: #333;
 }
 
 .experience-themes {
@@ -1416,6 +1431,14 @@ body::after {
 
   .experience-header {
     min-height: 480px;
+    padding: 0;
+  }
+
+  .experience-header-meta {
+    padding: 48px 120px 72px 48px;
+  }
+
+  .experience-header-body {
     padding: 48px;
   }
 
@@ -1590,15 +1613,23 @@ body::after {
 
   .experience-header {
     min-height: 580px;
-    padding: 32px;
-    border-radius: 0 0 32px 32px;
-    gap: 48px;
+    padding: 0;
+    border-radius: 0;
+    gap: 0;
   }
 
   .experience-header-meta {
     flex-direction: column;
     align-items: flex-start;
-    padding-right: 52px;
+    min-height: 160px;
+    padding: 32px 76px 64px 32px;
+  }
+
+  .experience-header-body {
+    gap: 44px;
+    margin-top: -32px;
+    padding: 32px;
+    border-radius: 32px 32px 0 0;
   }
 
   .experience-header-main {
@@ -1616,7 +1647,6 @@ body::after {
     width: 56px;
     height: 56px;
     flex-basis: 56px;
-    border-radius: 18px;
   }
 
   .experience-summary {

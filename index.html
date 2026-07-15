@@ -70,7 +70,7 @@
         <li class="exp-item" data-experience="wecasa" role="button" tabindex="0" aria-haspopup="dialog">
           <div class="exp-period-panel">
             <span class="exp-period" data-en="2025 — Present" data-fr="2025 — Présent">2025 — Present</span>
-            <img class="exp-logo" src="images/companies/wecasa.png" alt="" loading="lazy">
+            <img class="exp-logo" src="images/companies/wecasa.jpeg" alt="" loading="lazy">
           </div>
           <div class="exp-main">
             <div class="exp-content">
@@ -100,7 +100,7 @@
           </div>
           <div class="exp-main">
             <div class="exp-content">
-              <h3 class="exp-company">Orange</h3>
+              <h3 class="exp-company">Orange Business Services</h3>
               <p class="exp-role">Product Designer</p>
             </div>
             <span class="exp-index">03</span>
@@ -148,16 +148,18 @@
               <span class="experience-context" id="experienceContext"></span>
               <span class="experience-period-detail" id="experiencePeriod"></span>
             </div>
-            <div class="experience-header-main">
-              <div class="experience-heading">
-                <img class="experience-logo" id="experienceLogo" src="" alt="">
-                <div>
-                  <p class="experience-role-detail" id="experienceRole"></p>
-                  <h2 class="experience-title" id="experienceTitle"></h2>
+            <div class="experience-header-body">
+              <div class="experience-header-main">
+                <div class="experience-heading">
+                  <img class="experience-logo" id="experienceLogo" src="" alt="">
+                  <div>
+                    <p class="experience-role-detail" id="experienceRole"></p>
+                    <h2 class="experience-title" id="experienceTitle"></h2>
+                  </div>
                 </div>
               </div>
+              <p class="experience-summary" id="experienceSummary"></p>
             </div>
-            <p class="experience-summary" id="experienceSummary"></p>
           </header>
 
           <div class="experience-themes" id="experienceThemes"></div>
@@ -350,7 +352,7 @@
       wecasa: {
         index: '01',
         company: 'Wecasa',
-        icon: 'images/companies/wecasa.png',
+        icon: 'images/companies/wecasa.jpeg',
         role: { en: 'Design Lead', fr: 'Design Lead' },
         period: { en: '2025 — Present', fr: '2025 — Présent' },
         context: { en: 'Current focus', fr: 'Priorités actuelles' },
@@ -491,28 +493,28 @@
       },
       orange: {
         index: '03',
-        company: 'Orange',
+        company: 'Orange Business Services',
         icon: 'images/companies/orange.ico',
         role: { en: 'Product Designer', fr: 'Product Designer' },
         period: { en: '2017 — 2019', fr: '2017 — 2019' },
         context: { en: 'Selected scope', fr: 'Périmètre choisi' },
         summary: {
-          en: 'A service-design mission inside a balanced product team, focused on making business support clearer for customers and more sustainable for internal contributors.',
-          fr: "Une mission de service design au sein d'une équipe produit équilibrée, pour rendre le support professionnel plus clair côté client et plus soutenable côté contributeurs internes."
+          en: 'A redesign mission for Orange Business Services, focused on help and support experiences for professional and enterprise offers.',
+          fr: "Une mission de redesign pour Orange Business Services, centrée sur l'expérience d'aide et d'assistance des offres à destination des professionnels et des entreprises."
         },
         themes: [
           {
-            title: { en: 'Design the service, not only the interface', fr: "Concevoir le service, pas seulement l'interface" },
+            title: { en: 'Redesign help and support', fr: "Redesigner l'aide et l'assistance" },
             copy: {
-              en: 'Connected the customer support journey with the internal workflow and tools required to create, maintain and distribute useful content.',
-              fr: "Connexion du parcours de support client avec les processus et outils internes nécessaires pour créer, maintenir et diffuser un contenu utile."
+              en: 'Redesigned the assistance experience for business customers, clarifying access to support, useful content and next steps across professional offers.',
+              fr: "Redesign de l'expérience d'assistance pour les clients professionnels, en clarifiant l'accès au support, aux contenus utiles et aux prochaines étapes selon les offres."
             }
           },
           {
-            title: { en: 'Make learning part of delivery', fr: "Intégrer l'apprentissage à la livraison" },
+            title: { en: 'Serve professional contexts', fr: 'Servir les contextes professionnels' },
             copy: {
-              en: 'Used interviews, usability tests, synthesis, competitive reviews and experiments to make evidence a regular input to product decisions.',
-              fr: "Usage d'entretiens, tests d'utilisabilité, synthèses, analyses concurrentielles et expérimentations pour faire de la preuve un apport régulier aux décisions produit."
+              en: 'Worked on support journeys shaped by the constraints of small businesses, professional users and enterprise accounts rather than consumer self-care.',
+              fr: "Travail sur des parcours d'assistance marqués par les contraintes des petites entreprises, des utilisateurs professionnels et des comptes entreprise, plutôt que par du self-care grand public."
             }
           },
           {
@@ -523,10 +525,10 @@
             }
           },
           {
-            title: { en: 'Grow design fluency', fr: 'Développer la culture design' },
+            title: { en: 'Structure support content', fr: "Structurer le contenu d'assistance" },
             copy: {
-              en: 'Established regular critique, ideation and retrospective rituals so the broader team could participate in design decisions with more confidence.',
-              fr: "Mise en place de rituels réguliers de critique, idéation et rétrospective pour permettre à toute l'équipe de contribuer aux décisions de design avec davantage d'assurance."
+              en: 'Connected the customer-facing experience with the internal workflow required to create, maintain and distribute reliable support content.',
+              fr: "Connexion entre l'expérience côté client et le workflow interne nécessaire pour créer, maintenir et diffuser des contenus d'assistance fiables."
             }
           }
         ]
@@ -791,8 +793,6 @@
         closeOverlays();
       }
     });
-
-
 
     // ── Line Hatching Portrait (canvas) ──────────────────────────────
     (function () {
